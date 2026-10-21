@@ -15,10 +15,18 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
     {
-      name: 'emit-version',
+      name: 'emit-app-manifest',
       apply: 'build',
       generateBundle() {
-        this.emitFile({ type: 'asset', fileName: 'VERSION', source: `${pkg.version}\n` })
+        this.emitFile({
+          type: 'asset',
+          fileName: 'stalwart-app.json',
+          source: JSON.stringify({
+            id: 'webui',
+            version: pkg.version,
+            minServerVersion: pkg.stalwart.minServerVersion,
+          }),
+        })
       },
     },
   ],
