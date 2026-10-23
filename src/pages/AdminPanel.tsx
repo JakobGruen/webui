@@ -63,18 +63,28 @@ export default function AdminPanel() {
     if (!section) return t('dashboard.title', 'Dashboard');
     if (!viewName) return section;
     let label: string | undefined;
-    for (const entry of searchIndex) {
-      if (entry.type !== 'link' || entry.viewName !== viewName) continue;
-      if (entry.section === section) {
-        label = entry.text;
-        break;
+    // SPDX-SnippetBegin
+    // SPDX-FileCopyrightText: 2020 Stalwart Labs LLC <hello@stalw.art>
+    // SPDX-License-Identifier: LicenseRef-SEL
+    if (viewName.startsWith('Dashboard/')) {
+      const dashboardId = viewName.slice('Dashboard/'.length);
+      label = schema?.dashboards?.find((dashboard) => dashboard.id === dashboardId)?.label;
+    }
+    // SPDX-SnippetEnd
+    if (label === undefined) {
+      for (const entry of searchIndex) {
+        if (entry.type !== 'link' || entry.viewName !== viewName) continue;
+        if (entry.section === section) {
+          label = entry.text;
+          break;
+        }
+        label ??= entry.text;
       }
-      label ??= entry.text;
     }
     const name = label ?? friendlyName(viewName);
     const title = id === 'new' ? t('form.createTitle', 'Create {{name}}', { name }) : name;
     return `${title} · ${section}`;
-  }, [section, viewName, id, searchIndex, t]);
+  }, [section, viewName, id, searchIndex, schema, t]);
 
   useDocumentTitle(pageTitle);
 

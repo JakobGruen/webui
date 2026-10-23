@@ -99,10 +99,14 @@ export function DashboardView({ dashboardId, section }: DashboardViewProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         {dashboards.length > 1 && (
-          <Tabs value={dashboardId} onValueChange={(id) => navigate(`/${section}/Dashboard/${id}`)}>
-            <TabsList>
+          <Tabs
+            className="min-w-0 max-w-full"
+            value={dashboardId}
+            onValueChange={(id) => navigate(`/${section}/Dashboard/${id}`)}
+          >
+            <TabsList className="max-w-full justify-start overflow-x-auto">
               {dashboards.map((d) => (
                 <TabsTrigger key={d.id} value={d.id}>
                   {d.label}
@@ -113,7 +117,7 @@ export function DashboardView({ dashboardId, section }: DashboardViewProps) {
         )}
         {dashboards.length === 1 && <h1 className="text-xl font-semibold">{dashboard.label}</h1>}
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="ml-auto flex flex-wrap items-center gap-2">
           {showNodeSelector && <NodeSelector nodes={nodes} value={nodeId} onChange={setNodeId} />}
           <PeriodSelector onRefresh={handleRefresh} loading={isLoading} />
         </div>
