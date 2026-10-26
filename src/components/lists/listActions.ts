@@ -5,6 +5,7 @@
  */
 
 import { resolveObject } from '@/lib/schemaResolver';
+import { UPSELL_HIDDEN } from '@/lib/upsell';
 import type { ObjectAction } from '@/lib/permissions';
 import type { ItemAction, MassAction, Schema } from '@/types/schema';
 import { filteredListSearch } from './listUrlState';
@@ -76,6 +77,7 @@ export function resolveItemActions(
         const target = resolveObject(schema, action.objectName);
         if (!target) break;
         const locked = !!target.enterprise && perms.isCommunity;
+        if (locked && UPSELL_HIDDEN) break;
         if (!locked && !perms.hasObjectPermission(target.permissionPrefix, 'Get')) break;
         out.push({
           key,

@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly VITE_OAUTH_CLIENT_ID?: string;
   readonly VITE_DEBUG_JMAP?: string;
   readonly VITE_DEBUG_FORMS?: string;
+  readonly VITE_HIDE_UPSELL?: string;
 }
 
 interface ImportMeta {

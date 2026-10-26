@@ -7,8 +7,9 @@
 import { useAccountStore } from '@/stores/accountStore';
 import { useSchemaStore } from '@/stores/schemaStore';
 import { useIsCommunity, usePermissionCheckers } from '@/hooks/usePermissions';
-import { isLinkEnterprise, isLinkVisible, visibleLayouts } from '@/lib/layout';
+import { findFirstAccessibleLinkInLayout, isLinkEnterprise, isLinkVisible, visibleLayouts } from '@/lib/layout';
 import { sectionLandingLink } from '@/lib/lastVisited';
+import { UPSELL_HIDDEN } from '@/lib/upsell';
 import type { Layout } from '@/types/schema';
 import { viewPath } from './navTree';
 
@@ -18,12 +19,21 @@ export function useLayoutNavigation() {
   const isCommunity = useIsCommunity();
   const { canGet, hasPermission } = usePermissionCheckers();
 
-  const layouts = schema ? visibleLayouts(schema, canGet, hasPermission) : [];
+  const isLocked = (viewName: string) => isCommunity && !!schema && isLinkEnterprise(schema, viewName);
+  const hideLocked = UPSELL_HIDDEN;
+
+  let layouts = schema ? visibleLayouts(schema, canGet, hasPermission) : [];
+  if (schema && hideLocked) {
+    layouts = layouts.filter(
+      (l) => findFirstAccessibleLinkInLayout(schema, l, edition, canGet, hasPermission) !== null,
+    );
+  }
 
   return {
     layouts,
-    isVisible: (viewName: string) => !schema || isLinkVisible(schema, viewName, canGet, hasPermission),
-    isLocked: (viewName: string) => isCommunity && !!schema && isLinkEnterprise(schema, viewName),
+    isVisible: (viewName: string) =>
+      (!schema || isLinkVisible(schema, viewName, canGet, hasPermission)) && !(hideLocked && isLocked(viewName)),
+    isLocked,
     landingPath: (layout: Layout): string | null => {
       if (!schema) return null;
       const link = sectionLandingLink(schema, layout, edition, canGet, hasPermission);

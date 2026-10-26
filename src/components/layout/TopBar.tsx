@@ -29,6 +29,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { buildEndSessionUrl, getPostLogoutRedirectUri, revokeSessionTokens } from '@/services/auth/oauth';
 import { useEffect, useState } from 'react';
 import { useIsCommunity } from '@/hooks/usePermissions';
+import { UPSELL_HIDDEN } from '@/lib/upsell';
 import { SIDEBAR_ID } from './sidebarContext';
 import { useLayoutNavigation } from './useLayoutNavigation';
 
@@ -47,6 +48,7 @@ export function TopBar() {
   const logout = useAuthStore((s) => s.logout);
   const sidebarOpen = useUIStore((s) => s.sidebarOpen);
   const isCommunity = useIsCommunity();
+  const showUpsell = !UPSELL_HIDDEN && isCommunity;
   const { layouts: navigableLayouts, landingPath } = useLayoutNavigation();
   const [upsellOpen, setUpsellOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -105,7 +107,7 @@ export function TopBar() {
       </div>
 
       <div className="ml-auto flex items-center gap-2 md:ml-0">
-        {isCommunity && <EnterpriseUpsell open={upsellOpen} onClose={() => setUpsellOpen(false)} />}
+        {showUpsell && <EnterpriseUpsell open={upsellOpen} onClose={() => setUpsellOpen(false)} />}
 
         <Button
           variant="ghost"
@@ -170,7 +172,7 @@ export function TopBar() {
               </>
             )}
 
-            {isCommunity && (
+            {showUpsell && (
               <>
                 <DropdownMenuItem onClick={() => setUpsellOpen(true)}>
                   <Sparkles aria-hidden="true" className="mr-2 h-4 w-4" />

@@ -9,6 +9,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ChevronDown, Lock } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { UPSELL_HIDDEN } from '@/lib/upsell';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { DynamicIcon } from '@/components/common/DynamicIcon';
 import { EnterpriseUpsell } from '@/components/common/EnterpriseUpsell';
@@ -206,9 +207,11 @@ export function Sidebar() {
         aria-label={t('sidebar.label', 'Sidebar')}
         className="fixed bottom-0 left-0 top-14 z-30 flex w-64 flex-col border-r bg-background"
       >
-        <span id={lockedHintId} className="sr-only">
-          {t('enterprise.featureHint', 'Enterprise feature')}
-        </span>
+        {!UPSELL_HIDDEN && (
+          <span id={lockedHintId} className="sr-only">
+            {t('enterprise.featureHint', 'Enterprise feature')}
+          </span>
+        )}
         <div className="flex-1 overflow-y-auto py-2 [scrollbar-width:thin]">
           <nav aria-label={layout.name} className="flex flex-col gap-0.5 px-2">
             <SidebarNavContext value={nav}>

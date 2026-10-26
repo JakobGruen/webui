@@ -15,6 +15,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { UPSELL_HIDDEN } from '@/lib/upsell';
 
 interface EnterpriseUpsellProps {
   open: boolean;
@@ -23,6 +24,8 @@ interface EnterpriseUpsellProps {
 
 export function EnterpriseUpsell({ open, onClose }: EnterpriseUpsellProps) {
   const { t } = useTranslation();
+
+  if (UPSELL_HIDDEN) return null;
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
