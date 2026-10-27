@@ -16,6 +16,10 @@ One switch, `UPSELL_HIDDEN` in `src/lib/upsell.ts` (true unless built with `VITE
 
 Total patch: 6 modified files and 1 new file, about 30 added lines.
 
+## Bug fixes
+
+- iOS WebKit ignores `position: relative` on `<tr>`, so each list row's stretched link covered the page and swallowed taps on buttons above the table (green-wald-mail#4). `relative` now sits on the link's cell (`src/components/lists/ListTable.tsx`); the link area is that cell, not the whole row. Upstream has the same bug.
+
 ## Deliberately left alone
 
 - `src/lib/layout.ts`, `src/lib/permissions.ts`, `src/stores/accountStore.ts`, `src/lib/schemaResolver.ts`: edition and enterprise gating logic. Parts carry `LicenseRef-SEL` snippets and are not touched at all.
