@@ -112,7 +112,7 @@ export function ListTable({
                 const label = rowLabel(item);
                 const href = rowHref(id);
                 return (
-                  <tr key={id} className="relative border-b transition-colors hover:bg-muted/50">
+                  <tr key={id} className="border-b transition-colors hover:bg-muted/50">
                     {selection && (
                       <td className="relative z-10 px-3 py-2">
                         <Checkbox
@@ -135,7 +135,8 @@ export function ListTable({
                       );
                       if (index === 0) {
                         return (
-                          <th key={col.name} scope="row" className="px-3 py-2 text-left font-normal">
+                          // iOS WebKit ignores position on <tr>, so the stretched link anchors to the cell.
+                          <th key={col.name} scope="row" className="relative px-3 py-2 text-left font-normal">
                             {href ? (
                               <Link
                                 to={href}
